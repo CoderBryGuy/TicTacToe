@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -29,9 +31,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void populateBoard() {
+        int counter = 1;
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(356, 356);
-        layoutParams.setMargins(0, 20,5, 180);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(256, 256);
+        layoutParams.setMargins(0, 20,5, 100);
 
         for (int i = 0; i < 3; i++) {
             gameRow = new LinearLayout(this);
@@ -39,10 +42,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             for (int j = 0; j < 3; j++) {
-                gamePiece =  new ImageView(this);
 
+                TextView textView = new TextView(this);
+                textView.setText(Integer.toString(counter));
+                gameRow.addView(textView);
+
+                gamePiece =  new ImageView(this);
                 gamePiece.setLayoutParams(layoutParams);
-                gamePiece.setTag(j+i);
+                gamePiece.setTag(counter++);
                 gamePiece.setOnClickListener(this);
 
                 gameRow.addView(gamePiece);
@@ -54,21 +61,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         ImageView clickedImg = (ImageView)v;
-        // selectedPiece.getTag();
-        //clickedImg.setVisibility(View.INVISIBLE);
+        int tag = (int)clickedImg.getTag();
+        //Toast.makeText(this, Integer.toString( tag), Toast.LENGTH_SHORT).show();
 
-
-        if(is1stPlayerTurn == true){
-
-            clickedImg.setImageResource(R.drawable.mario);
-            clickedImg.setVisibility(View.VISIBLE);
-            is1stPlayerTurn = false;
+        if(gameGrid[tag-1]!= null){
+            Toast.makeText(this, "You already clicked this box", Toast.LENGTH_SHORT).show();
+            return;
         }
-        else if(is1stPlayerTurn == false){
-
-            clickedImg.setImageResource(R.drawable.bowser);
-            clickedImg.setVisibility(View.VISIBLE);
-            is1stPlayerTurn = true;
+        else{
+            if (is1stPlayerTurn == true) {
+                gameGrid[tag-1] = new GameGrid(true, tag, GameGrid.Player.MARIO);
+                clickedImg.setImageResource(R.drawable.mario);
+                clickedImg.setVisibility(View.VISIBLE);
+                is1stPlayerTurn = false;
+                Toast.makeText(this, "Mario", Toast.LENGTH_SHORT).show();
+            }
+            else if (is1stPlayerTurn == false){
+                gameGrid[tag-1] = new GameGrid(true, tag, GameGrid.Player.BOWSER);
+                clickedImg.setImageResource(R.drawable.bowser);
+                clickedImg.setVisibility(View.VISIBLE);
+                is1stPlayerTurn = true;
+                Toast.makeText(this, "Bowser", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }//class

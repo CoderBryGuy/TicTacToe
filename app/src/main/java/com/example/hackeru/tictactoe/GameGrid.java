@@ -6,10 +6,28 @@ package com.example.hackeru.tictactoe;
 public class GameGrid {
     boolean isUsed = false;
     int position;
+    Player player;
 
-    public GameGrid(boolean isUsed, int position) {
+    public GameGrid(boolean isUsed, int position, Player player) {
         this.isUsed = isUsed;
         this.position = position;
+        this.player = player;
+    }
+
+    public GameGrid(int position) {
+        this.position = position;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     enum Player{
